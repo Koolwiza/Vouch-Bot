@@ -5,7 +5,7 @@ module.exports = {
     description: "Vouch for a user",
     aliases: ['upvote'],
     execute: async function (message, args, client, user) {
-        let vouchUser = message.mentions.users.first() || await client.users.fetch(args[0])
+        let vouchUser = await getUser(args[0])
         let reason = args.slice(1).join(" ")
         if(!vouchUser) return message.channel.send("Please provide a valid user")
         if(!reason) return message.channel.send("Please provide a vouch reason")
@@ -29,4 +29,17 @@ module.exports = {
             .setTimestamp()
             )
     }
+}
+
+let getUser = async function(search, client) {
+    let userRegex = /^<@!?(\d+)>$/
+    let user = null;
+    if (!search || typeof search !== "string") return;
+    if (search.match(userRegex)) {
+      const id = search.match(userRegex)[1];
+      user = client.users.fetch(id).catch(() => {});
+      if (user) return user;
+    }
+    user = await client.users.fetch(search).catch(() => {});
+    return user;
 }
