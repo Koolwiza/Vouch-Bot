@@ -5,7 +5,7 @@ module.exports = {
     description: "Vouch for a user",
     aliases: ['upvote'],
     execute: async function (message, args, client, user) {
-        let vouchUser = await getUser(args[0])
+        let vouchUser = await getUser(args[0], client)
         let reason = args.slice(1).join(" ")
         if(!vouchUser) return message.channel.send("Please provide a valid user")
         if(!reason) return message.channel.send("Please provide a vouch reason")
